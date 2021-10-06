@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opencv-yolo-stream
+  namespace: yolo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app : opencv-yolo-stream
+  template:
+    metadata:
+      labels:
+        app : opencv-yolo-stream
+    spec:
+      containers:
+        - name: opencv-yolo-stream
+          image: 596906176357.dkr.ecr.ap-northeast-2.amazonaws.com/fitness-vue:0.2
+          ports:
+            - containerPort: 4455

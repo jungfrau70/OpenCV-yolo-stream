@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: opencv-yolo-stream
+  namespace: yolo
+  labels:
+    app: opencv-yolo-stream
+spec:
+  selector:
+    app: opencv-yolo-stream
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 4455
