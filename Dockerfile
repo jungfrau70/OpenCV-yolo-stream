@@ -14,3 +14,4 @@ COPY .  ./code
 WORKDIR ./code
 RUN pip install -r requirements.txt
 EXPOSE 4455
+ENTRYPOINT [ "python", "OpenCV-yolo-stream-web.py",  "-u", "https://youtu.be/1EiC9bvVGnk", "-y", "yolo-coco" ]

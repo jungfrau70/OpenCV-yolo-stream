@@ -188,15 +188,15 @@ while True:
             cv2.FONT_HERSHEY_COMPLEX, 0.8, (255, 255, 255), 2)
 
     # check if video output directory is given
-    if args["output"] is not None:
-        # check if the video writer is None
-        if writer is None:
-          # initialize our video writer
-          fourcc = cv2.VideoWriter_fourcc(*"MJPG")
-          writer = cv2.VideoWriter(args["output"], fourcc, 30,
-              (frame.shape[1], frame.shape[0]), True)
-        #write the output frame to disk
-        writer.write(frame)
+    # if args["output"] is not None:
+    #     # check if the video writer is None
+    #     if writer is None:
+    #       # initialize our video writer
+    #       fourcc = cv2.VideoWriter_fourcc(*"MJPG")
+    #       writer = cv2.VideoWriter(args["output"], fourcc, 30,
+    #           (frame.shape[1], frame.shape[0]), True)
+    #     #write the output frame to disk
+    #     writer.write(frame)
 
     # check if data output directory is given
     if args["data"] is not None:
@@ -235,12 +235,12 @@ while True:
     if key == ord("q"):
         break
 
-# check if data output directory is given
-if args["data"] is not None:
-    #save obj as csv 
-    obj_df = pd.DataFrame(obj)
-    obj_df.columns = ['Frame', 'Objects', 'Persons', 'Cars', 'Trucks', 'Busses', 'DateTime']
-    obj_df.to_csv(args["data"]) 
+    # check if data output directory is given
+    if args["data"] is not None:
+        # save obj as csv
+        obj_df = pd.DataFrame(obj)
+        obj_df.columns = ['Frame', 'Objects', 'Persons', 'Cars', 'Trucks', 'Busses', 'DateTime']
+        obj_df.to_csv(args["data"])
 
 cv2.destroyAllWindows()
 

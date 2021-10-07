@@ -1,12 +1,15 @@
 
-# Create ECR repo
-$ aws ecr create-repository --repository-name opencv-yolo-stream --image-scanning-configuration scanOnPush=true --region ap-northeast-2
+
 
 # Authenticate
 $ aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 596906176357.dkr.ecr.ap-northeast-2.amazonaws.com
 
+# Create ECR repo
+$ aws ecr create-repository --repository-name opencv-yolo-stream --image-scanning-configuration scanOnPush=true --region ap-northeast-2
+
 # Tag the image to push to your repository.
-$ docker tag yolov4:0.8 596906176357.dkr.ecr.ap-northeast-2.amazonaws.com/opencv-yolo-stream:latest
+$ docker tag yolov3:0.1 596906176357.dkr.ecr.ap-northeast-2.amazonaws.com/opencv-yolo-stream:latest
+$ docker tag yolov3-k8s:0.1 596906176357.dkr.ecr.ap-northeast-2.amazonaws.com/opencv-yolo-stream:latest-k8s
 
 # Push
 $ docker push 596906176357.dkr.ecr.ap-northeast-2.amazonaws.com/opencv-yolo-stream:latest
