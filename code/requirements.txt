@@ -1,0 +1,10 @@
+argparse
+datetime
+flask_opencv_streamer
+numpy
+opencv-python
+opencv-contrib-python
+pandas
+pafy
+streamlink
+youtube-dl

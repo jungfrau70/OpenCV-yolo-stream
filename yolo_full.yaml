@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dev
+  name: deployment-yolo
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: app-yolo
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: app-yolo
+    spec:
+      containers:
+      - image: 596906176357.dkr.ecr.ap-northeast-2.amazonaws.com/opencv-yolo-stream:0.2
+        imagePullPolicy: Always
+        name: app-yolo
+        ports:
+        - containerPort: 4455
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: dev
+  name: service-yolo
+spec:
+  ports:
+    - port: 80
+      targetPort: 4455
+      protocol: TCP
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: app-yolo
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  namespace: dev
+  name: ingress-yolo
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:596906176357:certificate/8ec567fd-fd03-4a57-b837-fead72c6d100
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'    
+    # alb.ingress.kubernetes.io/auth-idp-cognito: '{"UserPoolArn":"arn:aws:cognito-idp:ap-northeast-2:596906176357:userpool/ap-northeast-2_mCAntIjRq","UserPoolClientId":"3gnvcakr6quq0j6pthc3p5jjuv",
+    #   "UserPoolDomain":"kfusers.auth.ap-northeast-2.amazoncognito.com"}'
+    # alb.ingress.kubernetes.io/auth-type: cognito
+
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            backend:
+              serviceName: service-yolo
+              servicePort: 80
