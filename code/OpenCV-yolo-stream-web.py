@@ -1,8 +1,8 @@
 # run in command prompt (no output files)
-# python OpenCV-yolo-stream-web.py --yolo yolo-coco --url https://youtu.be/1EiC9bvVGnk
+# python OpenCV-yolo-stream-web-old.py --yolo yolo-coco --url https://youtu.be/1EiC9bvVGnk
 
 # run in command prompt (with output files)
-# python OpenCV-yolo-stream-web.py --yolo yolo-coco --url https://youtu.be/1EiC9bvVGnk --output output/ouput_videosteam.avi --data output/CSV/data_videosteam.csv 
+# python OpenCV-yolo-stream-web-old.py --yolo yolo-coco --url https://youtu.be/1EiC9bvVGnk --output output/ouput_videosteam.avi --data output/CSV/data_videosteam.csv
 
 # JacksonHole streams https://youtu.be/RZWzyQuFxgE & https://youtu.be/1EiC9bvVGnk
 
@@ -153,6 +153,7 @@ while True:
     cars = 0
     trucks = 0
     busses = 0
+    trafficlights = 0
     # ensure at least one detection exists
     if len(idxs) > 0:
 
@@ -163,7 +164,7 @@ while True:
             (w, h) = (boxes[i][2], boxes[i][3])
 
             # check for specific objects
-            if ("{}".format(LABELS[classIDs[i]]) == "person") or ("{}".format(LABELS[classIDs[i]]) == "car") or ("{}".format(LABELS[classIDs[i]]) == "truck") or ("{}".format(LABELS[classIDs[i]]) == "bus"):
+            if ("{}".format(LABELS[classIDs[i]]) == "person") or ("{}".format(LABELS[classIDs[i]]) == "traffic light") or ("{}".format(LABELS[classIDs[i]]) == "car") or ("{}".format(LABELS[classIDs[i]]) == "truck") or ("{}".format(LABELS[classIDs[i]]) == "bus"):
                 # draw a bounding box rectangle and label on the frame
                 color = [int(c) for c in COLORS[classIDs[i]]]
                 cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
@@ -174,6 +175,8 @@ while True:
                 # count specific objects
                 if "{}".format(LABELS[classIDs[i]]) == "person":
                   persons+=1
+                if "{}".format(LABELS[classIDs[i]]) == "traffic light":
+                  trafficlights+=1
                 if "{}".format(LABELS[classIDs[i]]) == "car":
                   cars+=1
                 if "{}".format(LABELS[classIDs[i]]) == "truck":
@@ -185,7 +188,8 @@ while True:
         ("Busses", busses),
         ("Trucks", trucks),
         ("Cars", cars),
-        ("Persons", persons),   
+        ("Persons", persons),
+        ("Traffic Lights", trafficlights),
     ]
     # loop over the info tuples and draw them on our frame
     for (i, (k, v)) in enumerate(info):
@@ -213,11 +217,12 @@ while True:
         obj[frame_ind][3] = int(cars)
         obj[frame_ind][4] = int(trucks)
         obj[frame_ind][5] = int(busses)
-        obj[frame_ind][6] = int(framedatetime)
+        obj[frame_ind][6] = int(trafficlights)
+        obj[frame_ind][7] = int(framedatetime)
         # save obj as csv every 10 frames
         if frame_ind % 10 == 0:
           obj_df = pd.DataFrame(obj)
-          obj_df.columns = ['Frame', 'Objects', 'Persons', 'Cars', 'Trucks', 'Busses', 'DateTime']
+          obj_df.columns = ['Frame', 'Objects', 'Persons', 'Cars', 'Trucks', 'Busses', 'Traffic Lights', 'DateTime']
           obj_df.to_csv(args["data"])
 
     # print object detection info 
@@ -226,6 +231,7 @@ while True:
     print("                cars: {:.0f}".format(int(cars)))
     print("              trucks: {:.0f}".format(int(trucks)))
     print("              busses: {:.0f}".format(int(busses)))
+    print("      traffic lights: {:.0f}".format(int(trafficlights)))
     
 
     # wait, if period is not over jet
@@ -252,7 +258,7 @@ while True:
 if args["data"] is not None:
     #save obj as csv 
     obj_df = pd.DataFrame(obj)
-    obj_df.columns = ['Frame', 'Objects', 'Persons', 'Cars', 'Trucks', 'Busses', 'DateTime']
+    obj_df.columns = ['Frame', 'Objects', 'Persons', 'Cars', 'Trucks', 'Busses', 'Traffic Lights', 'DateTime']
     obj_df.to_csv(args["data"]) 
 
 cv2.destroyAllWindows()

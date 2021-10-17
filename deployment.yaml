@@ -16,7 +16,7 @@ spec:
         # checks: passed
     spec:
       containers:
-      - image: 596906176357.dkr.ecr.ap-northeast-2.amazonaws.com/opencv-yolo-stream:0.5
+      - image: 596906176357.dkr.ecr.ap-northeast-2.amazonaws.com/opencv-yolo-stream:0.6
         imagePullPolicy: Always
         name: app-yolo
         ports:
